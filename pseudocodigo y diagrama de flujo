@@ -1,0 +1,165 @@
+ALGORITMO SimulacionVueloCohete
+
+    DEFINIR tiempo COMO ENTERO
+    DEFINIR altitud_previa COMO REAL
+    DEFINIR altitud_maxima COMO REAL
+    DEFINIR apogeo_detectado COMO LOGICO
+    DEFINIR suma_temperaturas COMO REAL
+    DEFINIR contador_lecturas COMO ENTERO
+    DEFINIR aceleracion_maxima COMO REAL
+
+    tiempo = 0
+    altitud_previa = 0.0
+    altitud_maxima = 0.0
+    apogeo_detectado = FALSO
+    suma_temperaturas = 0.0
+    contador_lecturas = 0
+    aceleracion_maxima = 0.0
+
+    MIENTRAS VERDADERO HACER
+
+        MOSTRAR "--- Segundo ", tiempo, " ---"
+        LEER entrada
+
+        SI entrada = "fin" ENTONCES
+            MOSTRAR "Simulacion finalizada."
+            SALIR DEL CICLO
+        FIN SI
+
+        MOSTRAR "Presion (hPa): "
+        LEER presion
+
+        MOSTRAR "Aceleracion (m/s^2): "
+        LEER aceleracion
+
+        MOSTRAR "Temperatura (C): "
+        LEER temperatura
+
+        // CALCULAR ALTITUD
+        altitud_actual ← 44330 * (1 - (presion / 1013.25)^0.1903)
+
+        // ACTUALIZAR ALTITUD MAXIMA
+        SI altitud_actual > altitud_maxima ENTONCES
+            altitud_maxima ← altitud_actual
+        FIN SI
+
+        // DETECTAR APOGEO
+        SI apogeo_detectado = FALSO Y altitud_actual < altitud_previa ENTONCES
+            apogeo_detectado ← VERDADERO
+            MOSTRAR ">> APOGEO DETECTADO <<"
+        FIN SI
+
+        // DETERMINAR ESTADO DEL VUELO
+        SI altitud_actual > altitud_previa ENTONCES
+            codigo_estado ← 1
+        SINO
+            SI aceleracion > -3.0 ENTONCES
+                codigo_estado ← 3
+            SINO
+                codigo_estado ← 2
+            FIN SI
+        FIN SI
+
+        // CONVERTIR CODIGO A TEXTO
+        SI codigo_estado = 1 ENTONCES
+            estado_legible ← "Ascenso"
+        SINO SI codigo_estado = 2 ENTONCES
+            estado_legible ← "Apogeo / Caida libre"
+        SINO
+            estado_legible ← "Despliegue de Paracaidas"
+        FIN SI
+
+        // EVALUAR TEMPERATURA
+        SI temperatura > 80.0 ENTONCES
+            alerta_activa ← VERDADERO
+        SINO
+            alerta_activa ← FALSO
+        FIN SI
+
+        // CALCULAR TEMPERATURA PROMEDIO
+        contador_lecturas ← contador_lecturas + 1
+        suma_temperaturas ← suma_temperaturas + temperatura
+        temperatura_promedio ← suma_temperaturas / contador_lecturas
+
+        // ACTUALIZAR ACELERACION MAXIMA
+        SI aceleracion > aceleracion_maxima ENTONCES
+            aceleracion_maxima ← aceleracion
+        FIN SI
+
+        // MOSTRAR RESULTADOS
+        MOSTRAR "Altitud actual: ", altitud_actual, " m"
+        MOSTRAR "Estado de vuelo: ", estado_legible
+        MOSTRAR "Altitud maxima: ", altitud_maxima, " m"
+        MOSTRAR "Temperatura promedio: ", temperatura_promedio, " C"
+        MOSTRAR "Aceleracion maxima: ", aceleracion_maxima, " m/s^2"
+
+        // MOSTRAR ALERTA
+        SI alerta_activa = VERDADERO ENTONCES
+            MOSTRAR "ALERTA: Temperatura critica detectada."
+        FIN SI
+
+        // ACTUALIZAR DATOS PARA EL SIGUIENTE SEGUNDO
+        altitud_previa ← altitud_actual
+        tiempo ← tiempo + 1
+
+        // COMPROBAR ATERRIZAJE
+        SI apogeo_detectado = VERDADERO Y altitud_actual <= 0 ENTONCES
+            MOSTRAR "El cohete ha aterrizado."
+            SALIR DEL CICLO
+        FIN SI
+
+    FIN MIENTRAS
+
+FIN ALGORITMO
+
+
+
+                 ┌───────────────────────┐
+                 │       ENTRADAS        │
+                 ├───────────────────────┤
+                 │ Aceleración (m/s²)    │
+                 │ Presión (hPa)         │
+                 │ Temperatura (°C)      │
+                 │ Entrada "fin"         │
+                 └───────────┬───────────┘
+                             │
+                             ▼
+                 ┌───────────────────────┐
+                 │       PROCESOS        │
+                 ├───────────────────────┤
+                 │ Calcular altitud      │
+                 │                       │
+                 │ Actualizar altitud    │
+                 │ máxima                │
+                 │                       │
+                 │ Detectar apogeo       │
+                 │                       │
+                 │ Determinar estado     │
+                 │ del vuelo             │
+                 │                       │
+                 │ Evaluar temperatura   │
+                 │ crítica               │
+                 │                       │
+                 │ Calcular temperatura  │
+                 │ promedio              │
+                 │                       │
+                 │ Calcular aceleración  │
+                 │ máxima                │
+                 │                       │
+                 │ Comprobar aterrizaje  │
+                 └───────────┬───────────┘
+                             │
+                             ▼
+                 ┌───────────────────────┐
+                 │        SALIDAS        │
+                 ├───────────────────────┤
+                 │ Altitud actual (m)    │
+                 │ Altitud máxima (m)    │
+                 │ Estado de vuelo       │
+                 │ Temperatura promedio  │
+                 │ Aceleración máxima    │
+                 │ Alerta de temperatura │
+                 │ Apogeo detectado      │
+                 │ Aterrizaje            │
+                 │ Simulación finalizada │
+                 └───────────────────────┘
