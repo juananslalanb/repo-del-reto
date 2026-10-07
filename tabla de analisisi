@@ -1,0 +1,7 @@
+Análisis E/P/S
+Entrada	             Proceso	                 Salida
+Presión (hPa)     	Calcular altitud   	    Altitud actual (m)
+Aceleración (m/s²)	Determinar estado    	  Estado del vuelo
+Temperatura (°C)	Revisar temperatura	      Alerta de temperatura
+—         	  Calcular promedios y máximos	   Valores calculados
+—	                   Detectar apogeo           	Mensaje de apogeo o aterrizaje
